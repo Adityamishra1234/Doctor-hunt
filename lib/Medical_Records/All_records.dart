@@ -13,6 +13,9 @@ class AllRecords extends StatefulWidget {
 }
 
 class _AllRecordsState extends State<AllRecords> {
+
+  String? _selectedItem;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,8 +131,47 @@ class _AllRecordsState extends State<AllRecords> {
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
-                                                  IconButton(onPressed: (){
-                                                  }, icon: Icon(Icons.more_vert_rounded, color: Colors.grey,),),
+                                                  PopupMenuButton<String>(
+                                                    onSelected: (result){
+                                                      setState(() {
+                                                        _selectedItem = result;
+                                                      });
+                                                      if(_selectedItem == "Delete Record"){
+                                                        deleteRecord(index);
+                                                        // FirebaseFirestore.instance.collection("DoctorHunt").doc().id.delete();
+                                                      }
+                                                      },
+                                                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                                      PopupMenuItem(
+                                                        value: "Delete Record",
+                                                          child:Container(
+                                                            height: 18, // Set the height of the menu item
+                                                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(Icons.delete, color: const  Color(0x900EBE7F)), // Custom icon
+                                                                SizedBox(width: 10), // Spacer
+                                                                Text('Delete Record', style: TextStyle(color: Colors.black54)), // Custom text style
+                                                              ],
+                                                            ),
+                                                          ),),
+                                                      PopupMenuItem(
+                                                        value: "View Image",
+                                                          child: Container(
+                                                            height: 18, // Set the height of the menu item
+                                                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(Icons.image, color: const  Color(0x900EBE7F)), // Custom icon
+                                                                SizedBox(width: 10), // Spacer
+                                                                Text('View Image', style: TextStyle(color: Colors.grey[600])), // Custom text style
+                                                              ],
+                                                            ),
+                                                          ),
+                                                      ),
+                                                    ],
+                                                    child: IconButton(onPressed: null, icon: Icon(Icons.more_vert_rounded, color: Colors.grey,),),
+                                                  ),
                                                 ],
                                               ),
                                             )
@@ -151,7 +193,7 @@ class _AllRecordsState extends State<AllRecords> {
                         }
                       }
                       else{
-                        return CircularProgressIndicator(color: const  Color(0xff0EBE7F));
+                        return Center(child: CircularProgressIndicator(color: const  Color(0xff0EBE7F)));
                       }
                     }
                   ),
@@ -173,5 +215,20 @@ class _AllRecordsState extends State<AllRecords> {
         ),
       ),
     );
+  }
+  void deleteRecord(int index){
+    FirebaseFirestore.instance.collection("DoctorHunt").get().then((querySnapshot) {
+      if (querySnapshot.size > index) {
+        // Check if the index is within the range of documents
+        var documentSnapshot = querySnapshot.docs[index];
+        var documentId = documentSnapshot.id; // Get the document ID
+        FirebaseFirestore.instance.collection("DoctorHunt").doc(documentId).delete();
+      } else {
+        print("Index out of range");
+      }
+    }).catchError((error) {
+      print("Error getting documents: $error");
+    });
+
   }
 }
