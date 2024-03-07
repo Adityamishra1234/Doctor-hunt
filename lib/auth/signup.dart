@@ -6,7 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
+import '../Firebase_Backend/auth/google_sign_in.dart';
+import '../Firebase_Backend/auth/userProvider.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
 class Register extends StatefulWidget {
@@ -113,6 +116,8 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    // final userProvider = Provider.of<UserProvider>(context);
+    // final user = userProvider.userName;
     return Scaffold(
       appBar: null,
       body:Stack(
@@ -159,7 +164,22 @@ class _RegisterState extends State<Register> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(
-                                  onTap: (){
+                                  onTap: () async {
+                                    try{
+                                      await signInWithGoogle(context);
+                                      // if(user != null){
+                                      //   Future.delayed(Duration(milliseconds: 3000) ,() {
+                                      //     Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(name: user.displayName,)));
+                                      //   });
+                                      // }
+                                      // else {
+                                      //   print("user name is coming ${user?.displayName}");
+                                      // }
+
+                                    }
+                                    catch(e){
+                                      print("No sign in with google because of $e");
+                                    }
                                     // Navigator.push(context, MaterialPageRoute(builder: (context)=>InsideArticles()));
                                   },
                                   child: Container(

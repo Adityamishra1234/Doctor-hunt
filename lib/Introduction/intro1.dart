@@ -121,9 +121,10 @@ class _IntroductionState extends State<Introduction> {
               child: LoginButton(
                 title: "Get Started",
                 onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Register()));
                   // if (currentIndex == contents.length - 1) {
                   // Navigator.pushNamed(context, HomeBar.route);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
                   // }
                   // _controller.nextPage(
                   //   duration: const Duration(milliseconds: 100),
@@ -141,8 +142,7 @@ class _IntroductionState extends State<Introduction> {
               width: double.infinity,
               child:  GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Register()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
                 },
                 child: const Center(
                     child: Text("Skip",

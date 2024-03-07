@@ -11,7 +11,9 @@ import 'package:doctor_hunt/Your%20Profile/profile_Page.dart';
 import 'package:doctor_hunt/widgets/AppBarHeader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../Firebase_Backend/auth/userProvider.dart';
 import '../Medical_Records/All_records.dart';
 import '../auth/login.dart';
 
@@ -49,6 +51,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final userName = userProvider.userName;
+    final userEmail = userProvider.userEmail;
+    final userProfile = userProvider.userPhotoUrl;
+    final userNumber = userProvider.userNumber;
     return Scaffold(
       appBar: null,
       body: Container(
@@ -66,7 +73,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
                 child: AppBarHeader("More", () {
                   Navigator.of(context).pop();
-                }),
+                },
+                    isBack : false,
+                ),
               ),
               const SizedBox(height: 3),
               Container(
@@ -112,18 +121,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               )
                             ]
                         ),
-                        child: Image.asset("assets/images/homescreenprofile.png"),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                            child: Image.network("${userProfile}", scale: 1.4,)),
                       ),
                       const SizedBox(height: 8,),
-                      const Text("Aditya Mishra", style: TextStyle(
+                      Text("${userName}", style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),),
-                      const Text("+91 6393507847", style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),),
-                      const Text("meaditya@gmail.com", style: TextStyle(
+                      // Text("", style: TextStyle(
+                      //   fontWeight: FontWeight.w500,
+                      //   fontSize: 15,
+                      // ),),
+                      Text("${userEmail}", style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 10,
                       ),),
