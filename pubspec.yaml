@@ -40,15 +40,21 @@ dependencies:
   latlong2: ^0.9.0
   flutter_datetime_picker_plus: ^2.1.0
   quickalert: ^1.0.2
-  intl: ^0.17.0
+  intl: ^0.19.0
   image_picker: ^1.0.7
   fluttertoast: ^8.2.4
+  photo_view: ^0.14.0
+
+#  for UniqueIds
+  uuid: ^4.2.2
 
 #  firebase related packages
-  firebase_auth: ^4.6.0
-  firebase_core: ^2.13.1
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.24.2
   flutter_facebook_auth: ^6.1.0
-  cloud_firestore: ^4.6.0
+  cloud_firestore: ^4.14.0
+  firebase_storage: ^11.6.0
+
 
 
 

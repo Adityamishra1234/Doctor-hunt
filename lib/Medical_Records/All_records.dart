@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_hunt/Medical_Records/add_Records_patients.dart';
 import 'package:doctor_hunt/widgets/customButton.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 
 import '../widgets/AppBarHeader.dart';
 
@@ -40,7 +42,7 @@ class _AllRecordsState extends State<AllRecords> {
                 ),
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection("DoctorHunt").snapshots(),
+                    stream: FirebaseFirestore.instance.collection("All Records").snapshots(),
                     builder: (context, snapshot) {
 
                       if(snapshot.connectionState == ConnectionState.active){
@@ -140,6 +142,23 @@ class _AllRecordsState extends State<AllRecords> {
                                                         deleteRecord(index);
                                                         // FirebaseFirestore.instance.collection("DoctorHunt").doc().id.delete();
                                                       }
+                                                      else if(_selectedItem == "View Image"){
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            return Dialog(
+                                                              child: Container(
+                                                                width: MediaQuery.of(context).size.width * 0.8,
+                                                                height: MediaQuery.of(context).size.height * 0.6,
+                                                                child: PhotoView(
+                                                                  imageProvider: NetworkImage("${recordData['image']}"),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        );
+                                                      }
+
                                                       },
                                                     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                                                       PopupMenuItem(
@@ -217,12 +236,12 @@ class _AllRecordsState extends State<AllRecords> {
     );
   }
   void deleteRecord(int index){
-    FirebaseFirestore.instance.collection("DoctorHunt").get().then((querySnapshot) {
+    FirebaseFirestore.instance.collection("All Records").get().then((querySnapshot) {
       if (querySnapshot.size > index) {
         // Check if the index is within the range of documents
         var documentSnapshot = querySnapshot.docs[index];
         var documentId = documentSnapshot.id; // Get the document ID
-        FirebaseFirestore.instance.collection("DoctorHunt").doc(documentId).delete();
+        FirebaseFirestore.instance.collection("All Records").doc(documentId).delete();
       } else {
         print("Index out of range");
       }

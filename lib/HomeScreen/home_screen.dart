@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_hunt/HomeScreen/home_screen_model.dart';
 import 'package:doctor_hunt/auth/login.dart';
 import 'package:flutter/cupertino.dart';
@@ -296,63 +297,111 @@ class _homeScreenState extends State<homeScreen> {
                     SizedBox(
                       height: 350,
                       width: double.infinity,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (context, index){
-                            return GestureDetector(
-                              onTap: (){
-                                // Navigator.push(context, MaterialPageRoute(builder: (context)=>InsideArticles()));
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18, vertical: 10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: CupertinoColors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                       BoxShadow(
-                                         color: Colors.grey.withOpacity(0.5),
-                                         spreadRadius: -1.2, // Negative value to contain the shadow within the border
-                                         blurRadius: 5,
-                                         offset: const Offset(0, 2),
-                                       )],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Column(
-                                      children: [
-                                        Image.asset("assets/images/populardoctor1.png" ,fit: BoxFit.contain,),
-                                        const SizedBox(height: 10,),
-                                        const Text("Dr. Fillerup Grab",textAlign: TextAlign.center, style: TextStyle(
-                                          fontSize: 19,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Abhaya',
-                                          color: Colors.black,
-                                        ),),
-                                        const Text("Medicine Specialist",textAlign: TextAlign.center, style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w300,
-                                            fontFamily: 'Lato',
-                                            color: Color(0xff5B5B5B),
-                                            height: 2
-                                        ),),
-                                        const SizedBox(height: 10,),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: List.generate(
-                                            5,
-                                                (index) => const Icon(Icons.star, color: Color(0xff0EBE7F),),
-                                          ),
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance.collection("All Doctors").where('popularity' , isEqualTo:  "yes").snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: MediaQuery.of(context)
+                                      .size
+                                      .height *
+                                      0.3,
+                                ),
+                                Center(
+                                  child: CircularProgressIndicator(color: Color(0xff0EBE7F)),
+                                ),
+                              ],
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          }
+                          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: MediaQuery.of(context)
+                                      .size
+                                      .height *
+                                      0.15,
+                                ),
+                                Center(
+                                  child: Text(" No Data Found ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 20,
+                                    ),),
+                                ),
+                              ],
+                            );
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index){
+                                Map<String, dynamic>doctorData = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                                return GestureDetector(
+                                  onTap: (){
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>InsideArticles()));
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 10),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: CupertinoColors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                           BoxShadow(
+                                             color: Colors.grey.withOpacity(0.5),
+                                             spreadRadius: -1.2, // Negative value to contain the shadow within the border
+                                             blurRadius: 5,
+                                             offset: const Offset(0, 2),
+                                           )],
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: 170,
+                                                width:200,
+                                                child: Image.network("${doctorData['image']}" ,fit: BoxFit.fill,scale: 5, )),
+                                            const SizedBox(height: 10,),
+                                          Text("Dr. ${doctorData['name']}",textAlign: TextAlign.center, style: TextStyle(
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Abhaya',
+                                              color: Colors.black,
+                                            ),),
+                                            Text("${doctorData['category']} Specialist",textAlign: TextAlign.center, style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w300,
+                                                fontFamily: 'Lato',
+                                                color: Color(0xff5B5B5B),
+                                                height: 2
+                                            ),),
+                                            const SizedBox(height: 10,),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: List.generate(
+                                                doctorData['Total_rating'].round(),
+                                                    (index) => const Icon(Icons.star, color: Color(0xff0EBE7F)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          } ),
+                                );
+                              } );
+                        }
+                      ),
                     ),
 
                     const Padding(

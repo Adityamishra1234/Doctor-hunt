@@ -19,8 +19,8 @@ class PatientRecords extends StatefulWidget {
 
 class _PatientRecordsState extends State<PatientRecords> {
 
-  TextEditingController name = TextEditingController();
-  TextEditingController date = TextEditingController();
+  // TextEditingController name = TextEditingController();
+  // TextEditingController date = TextEditingController();
   File? image;
   DateTime selectedDate = DateTime.now();
 
@@ -31,7 +31,11 @@ class _PatientRecordsState extends State<PatientRecords> {
     setState(() {
       if(pickedFile != null){
         image =  File(pickedFile.path);
-        obj.image =  File(pickedFile.path);
+        obj.image =  image;
+        print("Image selected");
+      }
+      else{
+        print("Image not selected");
       }
     });
   }

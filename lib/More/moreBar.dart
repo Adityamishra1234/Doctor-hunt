@@ -150,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             MaterialPageRoute(builder: (context) => const ProfilePage()));
                       }
                       else if(index==2) {
-                        FirebaseFirestore.instance.collection("DoctorHunt").get().then((querySnapshot) {
+                        FirebaseFirestore.instance.collection("All Records").get().then((querySnapshot) {
                           if (querySnapshot.docs.isNotEmpty) {
                             Navigator.push(
                               context,
