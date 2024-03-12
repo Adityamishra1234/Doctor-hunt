@@ -1,6 +1,8 @@
 import 'package:doctor_hunt/Privacy_policy.dart';
 import 'package:doctor_hunt/auth/login.dart';
+import 'package:doctor_hunt/utils/message_handler.dart';
 import 'package:doctor_hunt/widgets/customButton.dart';
+import 'package:doctor_hunt/widgets/top_snackbar/custom_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -8,9 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
+import '../Firebase_Backend/auth/bloc.dart';
 import '../Firebase_Backend/auth/google_sign_in.dart';
 import '../Firebase_Backend/auth/userProvider.dart';
 import '../widgets/bottom_navigation_bar.dart';
+import '../widgets/progressIndicator/indicators.dart';
+import '../widgets/top_snackbar/top_snack_bar.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -35,9 +40,15 @@ class _RegisterState extends State<Register> {
 
   String selected = "";
   bool isSigningUp = false;
+  bool checkedRadio = false;
+  // late Bloc bloc;
 
   @override
   void initState() {
+    Bloc().msgController?.stream.listen((event) {
+      AppMessageHandler().showSnackBar(context, event);
+    });
+
     _namefocusNode = FocusNode();
     _emailfocusNode = FocusNode();
     _passwordfocusNode = FocusNode();
@@ -70,35 +81,85 @@ class _RegisterState extends State<Register> {
     String Name = name.text.trim();
     String Email = email.text.trim();
     String Password = password.text.trim();
+    bool radio = checkedRadio;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: Email,
-        password: Password,
-      );
-     // await CircularProgressIndicator(color: Color(0xff0EBE7F),);
-      await Fluttertoast.showToast(
-        msg: "Registration Successful, Please login now",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black45,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      // ignore: use_build_context_synchronously
-          Future.delayed(Duration(milliseconds: 30), () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Login(name: Name)));
-      });
+      if (Name.isEmpty && Email.isEmpty && Password.isEmpty && radio == false) {
+        showTopSnackBar(
+          context,
+          CustomSnackBar.info(message: "Please fill up the details"),
+          showOutAnimationDuration: Duration(milliseconds: 800),
+          hideOutAnimationDuration: Duration(milliseconds: 800),
+          displayDuration: const Duration(milliseconds: 1500),
+        );
+      } else if (Name.isEmpty) {
+        showTopSnackBar(
+          context,
+          CustomSnackBar.error(message: "Please fill your Name"),
+          showOutAnimationDuration: Duration(milliseconds: 800),
+          hideOutAnimationDuration: Duration(milliseconds: 800),
+          displayDuration: const Duration(milliseconds: 1500),
+        );
+      }else if (radio==false) {
+        showTopSnackBar(
+          context,
+          CustomSnackBar.error(message: "Please confirm policies"),
+          showOutAnimationDuration: Duration(milliseconds: 800),
+          hideOutAnimationDuration: Duration(milliseconds: 800),
+          displayDuration: const Duration(milliseconds: 1500),
+        );
+      } else if (Email.isEmpty) {
+        showTopSnackBar(
+          context,
+          CustomSnackBar.error(message: "Please fill your Email"),
+          showOutAnimationDuration: Duration(milliseconds: 800),
+          hideOutAnimationDuration: Duration(milliseconds: 800),
+          displayDuration: const Duration(milliseconds: 1500),
+        );
+      } else if (Password.isEmpty) {
+        showTopSnackBar(
+          context,
+          CustomSnackBar.error(message: "Please fill your Password"),
+          showOutAnimationDuration: Duration(milliseconds: 800),
+          hideOutAnimationDuration: Duration(milliseconds: 800),
+          displayDuration: const Duration(milliseconds: 1500),
+        );
+      } else {
+        showProgressDialog(context);
+
+        // Perform Firebase registration
+        UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: Email,
+          password: Password,
+        );
+
+        // Hide CircularProgressIndicator
+        hideProgressDialog(context);
+
+        // Show registration success message
+        showTopSnackBar(
+          context,
+          CustomSnackBar.success(message: "Registration Successful"),
+          showOutAnimationDuration: Duration(milliseconds: 800),
+          hideOutAnimationDuration: Duration(milliseconds: 800),
+          displayDuration: const Duration(milliseconds: 1500),
+        );
+
+        // Navigate to login screen after a delay
+        Future.delayed(Duration(milliseconds: 30), () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Login(name: Name)));
+        });
+      }
     } catch (error) {
-      print(error);
-      await Fluttertoast.showToast(
-        msg: "Registration Failed",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black45,
-        textColor: Colors.white,
-        fontSize: 16.0,
+      print("error occurred because of: $error");
+      // Show registration failure message
+      showTopSnackBar(
+        context,
+        CustomSnackBar.error(message: "Registration Failed"),
+        showOutAnimationDuration: Duration(milliseconds: 800),
+        hideOutAnimationDuration: Duration(milliseconds: 800),
+        displayDuration: const Duration(milliseconds: 1500),
       );
     } finally {
       setState(() {
@@ -106,6 +167,8 @@ class _RegisterState extends State<Register> {
       });
     }
   }
+
+
   @override
   void dispose(){
     _namefocusNode.dispose();
@@ -130,366 +193,366 @@ class _RegisterState extends State<Register> {
               ),
             ),
           ),
-          Expanded(
-            child: Center(
-              child: SingleChildScrollView(
-                child: SafeArea(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 60,),
-                          const Text("Join us to start searching",
-                            maxLines: 3,
-                            style:  TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff414040),
-                            ),
+          Center(
+            child: SingleChildScrollView(
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60,),
+                        const Text("Join us to start searching",
+                          maxLines: 3,
+                          style:  TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xff414040),
                           ),
-                          const Text("You can search course, apply course and find scholarship for abroad studies",
-                            textAlign:TextAlign.center,
-                            maxLines: 5,
-                            style:  TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey,
-                            ),
+                        ),
+                        const Text("You can search course, apply course and find scholarship for abroad studies",
+                          textAlign:TextAlign.center,
+                          maxLines: 5,
+                          style:  TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.grey,
                           ),
-                          // const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 58.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    try{
-                                      await signInWithGoogle(context);
-                                      // if(user != null){
-                                      //   Future.delayed(Duration(milliseconds: 3000) ,() {
-                                      //     Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(name: user.displayName,)));
-                                      //   });
-                                      // }
-                                      // else {
-                                      //   print("user name is coming ${user?.displayName}");
-                                      // }
-
-                                    }
-                                    catch(e){
-                                      print("No sign in with google because of $e");
-                                    }
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>InsideArticles()));
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: -1.2, // Negative value to contain the shadow within the border
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        )],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 18.0, bottom: 18,right: 25, left: 25),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Image.asset("assets/images/google.png"),
-                                          const SizedBox(width: 10,),
-                                          const Text("Google",
-                                            textAlign:TextAlign.center,
-                                            maxLines: 3,
-                                            style:  TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                        ),
+                        // const Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 58.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  try{
+                                    // showProgressDialog(context);
+                                    await signInWithGoogle(context);
+                                    // hideProgressDialog(context);
+                                    // if(user != null){
+                                    //   Future.delayed(Duration(milliseconds: 3000) ,() {
+                                    //     Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(name: user.displayName,)));
+                                    //   });
+                                    // }
+                                    // else {
+                                    //   print("user name is coming ${user?.displayName}");
+                                    // }
+                                  }
+                                  catch(e){
+                                    print("No sign in with google because of $e");
+                                  }
+                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>InsideArticles()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: -1.2, // Negative value to contain the shadow within the border
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 2),
+                                      )],
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: (){
-
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>InsideArticles()));
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: CupertinoColors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: -1.1, // Negative value to contain the shadow within the border
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        )],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 18.0, bottom: 18, right: 25, left: 25),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Image.asset("assets/images/facebook.png", scale: 4,),
-                                          const SizedBox(width: 8,),
-                                          const Text("Facebook",
-                                            textAlign:TextAlign.center,
-                                            maxLines: 3,
-                                            style:  TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-
-                          //text fields
-                          Padding(
-                            padding: const EdgeInsets.only(top: 80.0, right: 15,left: 15),
-                            child: SizedBox(
-                                width:double.infinity,
-                                child: Focus(
-                                  onFocusChange: (bool hasFocus){
-                                    setState(() {
-                                      name1 = hasFocus?const Color(0xff0EBE7F):Colors.black45;
-                                      _namefocusNodeBorder = hasFocus
-                                          ? OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Color(0xff0EBE7F),
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      )
-                                          : OutlineInputBorder(
-                                        borderSide: const BorderSide(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 18.0, bottom: 18,right: 25, left: 25),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset("assets/images/google.png"),
+                                        const SizedBox(width: 10,),
+                                        const Text("Google",
+                                          textAlign:TextAlign.center,
+                                          maxLines: 3,
+                                          style:  TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w300,
                                             color: Colors.grey,
+                                          ),
                                         ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      );
-                                    });
-                                  },
-                                  child: TextField(
-                                    focusNode: _namefocusNode,
-                              controller: name,
-                              cursorColor: const Color(0xff0EBE7F),
-                              decoration: InputDecoration(
-                                    prefixIcon:  Icon(Icons.person,color: name1),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: (){
+
+                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>InsideArticles()));
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: CupertinoColors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: -1.1, // Negative value to contain the shadow within the border
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 2),
+                                      )],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 18.0, bottom: 18, right: 25, left: 25),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset("assets/images/facebook.png", scale: 4,),
+                                        const SizedBox(width: 8,),
+                                        const Text("Facebook",
+                                          textAlign:TextAlign.center,
+                                          maxLines: 3,
+                                          style:  TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+
+                        //text fields
+                        Padding(
+                          padding: const EdgeInsets.only(top: 80.0, right: 15,left: 15),
+                          child: SizedBox(
+                              width:double.infinity,
+                              child: Focus(
+                                onFocusChange: (bool hasFocus){
+                                  setState(() {
+                                    name1 = hasFocus?const Color(0xff0EBE7F):Colors.black45;
+                                    _namefocusNodeBorder = hasFocus
+                                        ? OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Color(0xff0EBE7F),
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )
+                                        : OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Colors.grey,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    );
+                                  });
+                                },
+                                child: TextField(
+                                  focusNode: _namefocusNode,
+                            controller: name,
+                            cursorColor: const Color(0xff0EBE7F),
+                            decoration: InputDecoration(
+                                  prefixIcon:  Icon(Icons.person,color: name1),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  enabledBorder: _namefocusNodeBorder,
+                                  focusedBorder: _namefocusNodeBorder,
+                                  hintText: "Enter Your Name",
+                            ),
+                          ),
+                              )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, right: 15,left: 15),
+                          child: SizedBox(
+                              width:double.infinity,
+                              child: Focus(
+                                onFocusChange: (bool hasFocus){
+                                  setState(() {
+                                    email1 = hasFocus?const Color(0xff0EBE7F):Colors.black45;
+                                    _emailfocusNodeBorder = hasFocus
+                                        ? OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff0EBE7F),
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )
+                                        : OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    );
+                                  });
+                                },
+                                child: TextField(
+                                  focusNode: _emailfocusNode,
+                                  controller: email,
+                                  cursorColor: const Color(0xff0EBE7F),
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.email,color: email1),
                                     filled: true,
                                     fillColor: Colors.white,
-                                    enabledBorder: _namefocusNodeBorder,
-                                    focusedBorder: _namefocusNodeBorder,
-                                    hintText: "Enter Your Name",
-                              ),
-                            ),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0, right: 15,left: 15),
-                            child: SizedBox(
-                                width:double.infinity,
-                                child: Focus(
-                                  onFocusChange: (bool hasFocus){
-                                    setState(() {
-                                      email1 = hasFocus?const Color(0xff0EBE7F):Colors.black45;
-                                      _emailfocusNodeBorder = hasFocus
-                                          ? OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Color(0xff0EBE7F),
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      )
-                                          : OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.grey,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      );
-                                    });
-                                  },
-                                  child: TextField(
-                                    focusNode: _emailfocusNode,
-                                    controller: email,
-                                    cursorColor: const Color(0xff0EBE7F),
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.email,color: email1),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      enabledBorder: _emailfocusNodeBorder,
-                                      focusedBorder: _emailfocusNodeBorder,
-                                      hintText: "Enter Your email",
-                                    ),
+                                    enabledBorder: _emailfocusNodeBorder,
+                                    focusedBorder: _emailfocusNodeBorder,
+                                    hintText: "Enter Your email",
                                   ),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0, right: 15,left: 15, bottom: 8),
-                            child: SizedBox(
-                                width:double.infinity,
-                                child: Focus(
-                                  onFocusChange: (bool hasFocus){
-                                    setState(() {
-                                      lock = hasFocus?const Color(0xff0EBE7F):Colors.black45;
-                                      _passwordfocusNodeBorder = hasFocus
-                                          ? OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Color(0xff0EBE7F),
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      )
-                                          : OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                          color: Colors.grey,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.0),
-                                      );
-                                    });
-                                  },
-                                  child: TextField(
-                                    focusNode: _passwordfocusNode,
-                                    controller: password,
-                                    obscureText: true,
-                                    cursorColor: const Color(0xff0EBE7F),
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.lock_person, color: lock),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      enabledBorder: _passwordfocusNodeBorder,
-                                      focusedBorder: _passwordfocusNodeBorder,
-                                      hintText: "Enter Your Password",
-                                    ),
+                                ),
+                              )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, right: 15,left: 15, bottom: 8),
+                          child: SizedBox(
+                              width:double.infinity,
+                              child: Focus(
+                                onFocusChange: (bool hasFocus){
+                                  setState(() {
+                                    lock = hasFocus?const Color(0xff0EBE7F):Colors.black45;
+                                    _passwordfocusNodeBorder = hasFocus
+                                        ? OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff0EBE7F),
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    )
+                                        : OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Colors.grey,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    );
+                                  });
+                                },
+                                child: TextField(
+                                  focusNode: _passwordfocusNode,
+                                  controller: password,
+                                  obscureText: true,
+                                  cursorColor: const Color(0xff0EBE7F),
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.lock_person, color: lock),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    enabledBorder: _passwordfocusNodeBorder,
+                                    focusedBorder: _passwordfocusNodeBorder,
+                                    hintText: "Enter Your Password",
                                   ),
-                                )),
-                          ),
+                                ),
+                              )),
+                        ),
 
-                          //radiobutton
-                          Padding(
-                            padding: const EdgeInsets.only(right: 6.0, left: 5),
-                            child: Row(
-                              children: [
-                               Radio(splashRadius: 1,activeColor: const  Color(0xff0EBE7F),value: "Check1", groupValue: selected, onChanged: (value){
-                                 setState(() {
-                                   selected = value.toString();
-                                 });
-                               }),
-                                Expanded(
-                                  child: RichText(
-                                    text:TextSpan(
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: "I agree with the ",
+                        //radiobutton
+                        Padding(
+                          padding: const EdgeInsets.only(right: 6.0, left: 5),
+                          child: Row(
+                            children: [
+                             Radio(splashRadius: 1,activeColor: const  Color(0xff0EBE7F),value: "Check1", groupValue: selected, onChanged: (value){
+                               setState(() {
+                                 selected = value.toString();
+                                 checkedRadio=!checkedRadio;
+                               });
+                             }),
+                              Expanded(
+                                child: RichText(
+                                  text:TextSpan(
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: "I agree with the ",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey,)
+                                      ),
+                                      TextSpan(
+                                          text: "Terms of service",
+                                          style: TextStyle(
+                                              decoration: TextDecoration.underline,
+                                              decorationColor: Color(0xff0EBE7F),
+                                              decorationStyle: TextDecorationStyle.solid,
+                                              decorationThickness: 3,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff0EBE7F))
+                                      ),
+                                      TextSpan(
+                                          text: " and ",
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.grey,)
-                                        ),
-                                        TextSpan(
-                                            text: "Terms of service",
-                                            style: TextStyle(
-                                                decoration: TextDecoration.underline,
-                                                decorationColor: Color(0xff0EBE7F),
-                                                decorationStyle: TextDecorationStyle.solid,
-                                                decorationThickness: 3,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xff0EBE7F))
-                                        ),
-                                        TextSpan(
-                                            text: " and ",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey,)
-                                        ),
-                                        TextSpan(
-                                          text: " Privacy Policy ",
-                                          style: TextStyle(
-                                            decoration: TextDecoration.underline,
-                                            decorationColor: Color(0xff0EBE7F),
-                                            decorationThickness: 3,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xff0EBE7F)),
-                                          recognizer: TapGestureRecognizer()..onTap = (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context)=>const PrivacyPolicy()));
-                                        }
-                                        ),
-
-                                      ],
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey,)
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          //buttons
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 40,
-                              right: 50,
-                              left: 50,
-                            ),
-                            child: LoginButton(title: "Sign Up",
-                                onTap: (){
-                                  createAccount();
-
-                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=> MyHomePage()));
-                                }
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              top: 30,
-                              left: 10,
-                              right: 10,
-                            ),
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Have an Account?",
-                                    style: TextStyle(
-                                        color: Colors.black45,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.45)),
-                                const SizedBox(width: 5,),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => const Login()));
-                                  },
-                                  child: Text("LOGIN",
-                                      style: TextStyle(
+                                      ),
+                                      TextSpan(
+                                        text: " Privacy Policy ",
+                                        style: TextStyle(
                                           decoration: TextDecoration.underline,
-                                          decorationColor:Colors.greenAccent,
-                                          color: Color(0xff0EBE7F),
+                                          decorationColor: Color(0xff0EBE7F),
+                                          decorationThickness: 3,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16.45)),
+                                          color: Color(0xff0EBE7F)),
+                                        recognizer: TapGestureRecognizer()..onTap = (){
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const PrivacyPolicy()));
+                                      }
+                                      ),
+
+                                    ],
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey,)
+                                  )
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 20,),
-                        ],
-                      ),
+                        ),
+
+                        //buttons
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 40,
+                            right: 50,
+                            left: 50,
+                          ),
+                          child: LoginButton(title: "Sign Up",
+                              onTap: ()async {
+                                await createAccount();
+
+                                // Navigator.push(context, MaterialPageRoute(builder: (context)=> MyHomePage()));
+                              }
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(
+                            top: 30,
+                            left: 10,
+                            right: 10,
+                          ),
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Have an Account?",
+                                  style: TextStyle(
+                                      color: Colors.black45,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16.45)),
+                              const SizedBox(width: 5,),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => const Login()));
+                                },
+                                child: Text("LOGIN",
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        decorationColor:Colors.greenAccent,
+                                        color: Color(0xff0EBE7F),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.45)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20,),
+                      ],
                     ),
                   ),
                 ),

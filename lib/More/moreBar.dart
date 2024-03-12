@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import '../Firebase_Backend/auth/userProvider.dart';
 import '../Medical_Records/All_records.dart';
 import '../auth/login.dart';
+import '../widgets/CachedImageView.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const route = "/ProfileScreen";
@@ -111,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(26),
-                            color: Colors.white,
+                            color: Colors.transparent,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -121,9 +122,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               )
                             ]
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                            child: Image.network("${userProfile}", scale: 1.4,)),
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          color: Colors.transparent,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedImageView(
+                              image: "${userProfile}",
+                              fit: BoxFit.fill,
+                              width: double.infinity,
+                              height: 220,
+                              errorHeight: 220,
+                              errorWidth: double.infinity,
+                              placeHolderHeight: 220,
+                              placeHolderWidth: double.infinity,
+                            ),),
+                        ),
                       ),
                       const SizedBox(height: 8,),
                       Text("${userName}", style: TextStyle(

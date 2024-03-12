@@ -4,7 +4,8 @@ class AppBarHeader extends StatefulWidget {
   String title;
   VoidCallback? onTap;
   bool isBack;
-  AppBarHeader(this.title, this.onTap,{this.isBack=true});
+  Color color;
+  AppBarHeader(this.title, this.onTap,{this.isBack=true, this.color = Colors.black});
 
   @override
   State<AppBarHeader> createState() => _AppBarHeaderState();
@@ -57,8 +58,10 @@ class _AppBarHeaderState extends State<AppBarHeader> {
                 child: Text(
                   widget.title,
                   style: TextStyle(
+                    color: widget.color,
                       fontWeight: FontWeight.bold,
-                      fontSize: 21
+                      fontSize: 21,
+                    fontFamily: "Abhaya"
                   ),
                 ),
               ),

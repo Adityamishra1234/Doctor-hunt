@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_hunt/widgets/AppBarHeader.dart';
 // import 'package:doctor_hunt/My Doctors/my_doctors.dart';
 
+import '../widgets/CachedImageView.dart';
 import 'My Doctors/my_doctors.dart';
 
 class doctors extends StatefulWidget {
@@ -167,14 +168,21 @@ class _doctorsState extends State<doctors> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(50), // Adjust the value as per your requirement
-                                          child: Image.network(
-                                            "${doctorData['image']}",
-                                            fit: BoxFit.fill,
-                                            width: 70, // Ensure to specify width and height to maintain the border radius
-                                            height: 70,
-                                          ),
+                                        Container(
+                                          width: 60,
+                                          height: 60,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(50),
+                                            child: CachedImageView(
+                                              image: "${doctorData['image']}",
+                                              fit: BoxFit.fill,
+                                              width: double.infinity,
+                                              height: 220,
+                                              errorHeight: 220,
+                                              errorWidth: double.infinity,
+                                              placeHolderHeight: 220,
+                                              placeHolderWidth: double.infinity,
+                                            ),),
                                         ),
 
                                         SizedBox(width: 20,),

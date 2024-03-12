@@ -1,9 +1,13 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:doctor_hunt/All_Doctors/doctors.dart';
+import 'package:doctor_hunt/Community/Community_main_screen.dart';
 import 'package:doctor_hunt/HomeScreen/home_screen.dart';
 import 'package:doctor_hunt/More/moreBar.dart';
 import 'package:doctor_hunt/auth/login.dart';
 import 'package:doctor_hunt/auth/signup.dart';
 import 'package:flutter/material.dart';
+
+import '../constants/constants.dart';
 
 class MyHomePage extends StatefulWidget {
   final String? name;
@@ -32,57 +36,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: null,
-      body: _pages[_currentIndex],
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: DefaultTextStyle(
-            style: const TextStyle(
-              fontWeight: FontWeight.bold
-            ),
-            child: BottomNavigationBar(
-              backgroundColor: Colors.white,
-              currentIndex: _currentIndex,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
-              unselectedItemColor: Colors.grey, // Set the selected item text color
-              selectedItemColor: const Color(0xff0EBE7F),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: 'Favourite',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.menu_book),
-                  label: 'Community',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.message),
-                  label: 'Chat',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.list_outlined, size: 25,),
-                  label: 'More',
-                ),
-              ],
-            ),
+    return Container(
+      color: Colors.black,
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          // extendBody: true,
+          appBar: null,
+          body: _pages[_currentIndex],
+          bottomNavigationBar: CurvedNavigationBar(
+            backgroundColor: Colors.transparent,
+            color: K.primaryColor,
+            height: 70,
+            index: _currentIndex,
+            onTap: (index)=>setState(() {
+              this._currentIndex = index;
+            }),
+            items: [
+              Icon(Icons.home, color: Colors.white),
+              Icon(Icons.favorite, color: Colors.white),
+              Image.asset("assets/images/communityIcon.png",scale: 18,color: Colors.white),
+              Image.asset("assets/images/social.png",scale: 20, color: Colors.white,),
+              Image.asset("assets/images/moreIcon.png",scale: 20,color: Colors.white),
+            ],
 
-          ),
+          )
 
         ),
       ),
-
     );
   }
 }
@@ -113,18 +94,22 @@ class PageTwo extends StatelessWidget {
 class PageThree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const homeScreen();
+    return const Community();
   }
 }
+
 class PageFour extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const homeScreen();
   }
 }
+
 class PageFive extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ProfileScreen();
   }
 }
+
+

@@ -1,4 +1,5 @@
 import 'package:doctor_hunt/Firebase_Backend/auth/userProvider.dart';
+import 'package:doctor_hunt/widgets/progressIndicator/indicators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,22 +14,24 @@ final GoogleSignIn googleSignIn = GoogleSignIn();
 
 Future<void> signInWithGoogle(BuildContext context) async {
   try {
-    // Trigger the Google Sign In flow
+    showProgressDialog(context);
+    // Triggering the Google Sign In flow
     final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
 
     if (googleSignInAccount != null) {
-      // Obtain the GoogleSignInAuthentication object
+      // Obtaining the GoogleSignInAuthentication object
       final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;
 
-      // Create a new credential
+      // Creating a new credential
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
 
-      // Sign in to Firebase with the Google credentials
+      // Signing in to Firebase with the Google credentials
       final UserCredential authResult = await _auth.signInWithCredential(credential);
+      hideProgressDialog(context);
       final User? user = authResult.user;
 
       if (user != null) {
@@ -37,7 +40,8 @@ Future<void> signInWithGoogle(BuildContext context) async {
         print('User Email: ${user.email}');
         print('User Photo URL: ${user.photoURL}');
         await _saveUserData(user.displayName, user.email, user.photoURL, user.phoneNumber);
-        // Navigate to the home page after successful sign-in
+        // Navigating to the home page after successful sign-in
+        // hideProgressDialog(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -52,7 +56,7 @@ Future<void> signInWithGoogle(BuildContext context) async {
   } catch (e) {
     // Handle errors
     print('Failed to sign in with Google: $e');
-    // You can show a snackbar or toast to inform the user about the error
+    // can show a snack bar or toast to inform the user about the error
     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to sign in with Google')));
   }
 

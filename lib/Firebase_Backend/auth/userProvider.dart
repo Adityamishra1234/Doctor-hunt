@@ -16,5 +16,16 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loadUserDataWithFuture() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString('userName') ?? '';
+    userEmail = prefs.getString('userEmail') ?? '';
+    userPhotoUrl = prefs.getString('userPhotoUrl') ?? '';
+    userNumber = prefs.getString('userNumber') ?? '';
+    // notifyListeners();
+  }
+
+
+
 // Your other provider methods
 }
