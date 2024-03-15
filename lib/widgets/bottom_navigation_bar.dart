@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:doctor_hunt/All_Doctors/doctors.dart';
+import 'package:doctor_hunt/Chat/Chat_main_screen.dart';
 import 'package:doctor_hunt/Community/Community_main_screen.dart';
 import 'package:doctor_hunt/HomeScreen/home_screen.dart';
 import 'package:doctor_hunt/More/moreBar.dart';
@@ -101,7 +102,7 @@ class PageThree extends StatelessWidget {
 class PageFour extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const homeScreen();
+    return const ChatMainScreen();
   }
 }
 

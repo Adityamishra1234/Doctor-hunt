@@ -144,6 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Text("${userName}", style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
+                        fontFamily: 'Abhaya'
                       ),),
                       // Text("", style: TextStyle(
                       //   fontWeight: FontWeight.w500,
@@ -152,6 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Text("${userEmail}", style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 10,
+                        fontFamily: 'Lato'
                       ),),
                       const SizedBox(height: 8,),
                       // const Icon(Icons.edit_note, size : 30,color:Colors.white)

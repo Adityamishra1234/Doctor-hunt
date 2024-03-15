@@ -112,16 +112,29 @@ class _CommunityState extends State<Community> {
                           itemExtent: 85,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                                margin: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: K.primaryColor, // Set the border color
-                                    width: 2, // Set the border width
-                                  ),
-                                  borderRadius: BorderRadius.circular(200), // Set border radius
+                            return Column(
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: K.primaryColor, // Set the border color
+                                        width: 2, // Set the border width
+                                      ),
+                                      borderRadius: BorderRadius.circular(200), // Set border radius
+                                    ),
+                                    child: Stories(),
                                 ),
-                                child: Stories(),
+                                Text("Aditya Mishra", style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                    fontFamily: 'Lato'
+                                ),),
+
+
+
+                              ],
                             );
                           },
 
@@ -650,8 +663,8 @@ class Stories extends StatelessWidget {
           ),
         ),
         child: Container(
-          height: 80,
-          width: 80,
+          height: 42,
+          width: 45,
           decoration: BoxDecoration(
               color: const Color(0xffFFFFFF),
               borderRadius: BorderRadius.circular(90),

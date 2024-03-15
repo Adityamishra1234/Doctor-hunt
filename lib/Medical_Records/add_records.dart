@@ -61,16 +61,21 @@ class _AddRecordsState extends State<AddRecords> {
                         Image.asset("assets/images/noRecords.png", scale: 3.5,),
                         const SizedBox(height: 35,),
                         const Text("Add a Medical Record.", textAlign:TextAlign.center,style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           fontSize: 21,
+                          fontFamily: 'Lato'
                         ),),
                         const SizedBox(height: 10,),
-                        const Text("A detailed health history helps a doctor to diagnose you better.", maxLines: 4,textAlign:TextAlign.center,style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Colors.grey,
-                          overflow: TextOverflow.ellipsis
-                        ),),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0, left: 8),
+                          child: const Text("A detailed health history helps a doctor to diagnose you better.", maxLines: 4,textAlign:TextAlign.center,style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: Colors.grey,
+                            overflow: TextOverflow.ellipsis,
+                            fontFamily: 'Lato'
+                          ),),
+                        ),
                         const SizedBox(height: 10,),
                         Padding(
                           padding: const EdgeInsets.all(25.0),

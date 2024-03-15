@@ -6,12 +6,14 @@ import 'package:doctor_hunt/Firebase_Backend/Medical_Records_firebase/saveRecord
 import 'package:doctor_hunt/Medical_Records/All_records.dart';
 import 'package:doctor_hunt/widgets/AppBarHeader.dart';
 import 'package:doctor_hunt/widgets/customButton.dart';
+import 'package:doctor_hunt/widgets/progressIndicator/indicators.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class PatientRecords extends StatefulWidget {
-  const PatientRecords({super.key});
+  final VoidCallback? onReturn;
+  const PatientRecords({super.key, this.onReturn});
 
   @override
   State<PatientRecords> createState() => _PatientRecordsState();
@@ -23,15 +25,23 @@ class _PatientRecordsState extends State<PatientRecords> {
   // TextEditingController date = TextEditingController();
   File? image;
   DateTime selectedDate = DateTime.now();
+  SavingRecords? obj;
 
 
-
+  void resetState() {
+    setState(() {
+      image = null;
+      obj?.record_for.clear();
+      obj?.Date.clear();
+      obj?.loading = false;
+    });
+  }
   void getImage() async{
     final pickedFile = await ImagePicker().pickImage(source:ImageSource.gallery);
     setState(() {
       if(pickedFile != null){
         image =  File(pickedFile.path);
-        obj.image =  image;
+        obj?.image =  image;
         print("Image selected");
       }
       else{
@@ -62,15 +72,18 @@ class _PatientRecordsState extends State<PatientRecords> {
       setState(() {
         selectedDate = picked;
         final formattedDate = DateFormat("d MMM, yyyy").format(picked);
-        obj.Date.text = formattedDate;
+        obj?.Date.text = formattedDate;
       });
 
     }
   }
 
 
-
- SavingRecords obj = SavingRecords();
+  @override
+  void initState() {
+    obj = SavingRecords(resetStateCallback: resetState);
+    super.initState();
+  }
 
 
   @override
@@ -88,7 +101,7 @@ class _PatientRecordsState extends State<PatientRecords> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
                 child: AppBarHeader("Add Records", () {
                   Navigator.of(context).pop();
                 }),
@@ -164,7 +177,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                               ),),
                               const SizedBox(height: 5,),
                               TextField(
-                                controller: obj.record_for,
+                                controller: obj?.record_for,
                                 cursorColor: const Color(0xff0EBE7F),
                                 style: const TextStyle(
                                   color: Color(0xff0EBE7F),
@@ -204,7 +217,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                                       children: [
                                         IconButton(
                                             onPressed: (){
-                                              obj.typeOfRecord = "Report";
+                                              obj?.typeOfRecord = "Report";
                                             },
                                             icon: Image.asset("assets/images/reports.png",scale: 0.8,)),
                                         const Text("Report", style: TextStyle(
@@ -218,7 +231,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                                       children: [
                                         IconButton(
                                             onPressed: (){
-                                              obj.typeOfRecord = "Prescription";
+                                              obj?.typeOfRecord = "Prescription";
                                             },
                                             icon: Image.asset("assets/images/reports.png",scale: 0.8)),
                                         const Text("Prescription", style: TextStyle(
@@ -232,7 +245,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                                       children: [
                                         IconButton(
                                             onPressed: (){
-                                              obj.typeOfRecord = "Invoice";
+                                              obj?.typeOfRecord = "Invoice";
                                             },
                                             icon: Image.asset("assets/images/reports.png",scale: 0.8)),
                                         const Text("Invoice", style: TextStyle(
@@ -258,7 +271,7 @@ class _PatientRecordsState extends State<PatientRecords> {
                               ),),
                               const SizedBox(height: 5,),
                               TextField(
-                                controller: obj.Date,
+                                controller: obj?.Date,
                                 onTap: (){
                                   selectDate(context);
                                 },
@@ -288,15 +301,12 @@ class _PatientRecordsState extends State<PatientRecords> {
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.all(20.0),
+                                padding: EdgeInsets.all(20.0),
                                 child: LoginButton(title: "Upload record",
                                   onTap: () async {
-                                   obj.saveRecords();
-                                      Future.delayed(Duration(milliseconds: 300), (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const AllRecords()));
-                                  });
+                                   obj?.saveRecords(context);
                                 },
-                                  loading: obj.loading,
+                                  loading: obj?.loading,
                                 ),
                               )
 
