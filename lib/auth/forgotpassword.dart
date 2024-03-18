@@ -85,100 +85,98 @@ void sendOtp(){
                 child: SingleChildScrollView(
                   child: Stack(
                     children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: SafeArea(
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 60,),
-                                    const Text("Forgot Password",
-                                      maxLines: 3,
-                                      style:  TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff414040),
-                                      ),
+                      SingleChildScrollView(
+                        child: SafeArea(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 60,),
+                                  const Text("Forgot Password",
+                                    maxLines: 3,
+                                    style:  TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff414040),
                                     ),
-                                    const SizedBox(height: 5,),
-                                    const Text("Enter your Phone number for the verification process\nWe will send 6 digit code.",
-                                      maxLines: 5,
-                                      style:  TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
-                                      ),
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  const Text("Enter your Phone number for the verification process\nWe will send 6 digit code.",
+                                    maxLines: 5,
+                                    style:  TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.grey,
                                     ),
-                                    const SizedBox(height: 35,),
-                                    // const Spacer(),
-                                    //text fields
-                                    SizedBox(
-                                        width:double.infinity,
-                                        child: Focus(
-                                          onFocusChange: (bool hasFocus){
-                                            setState(() {
-                                              otp1 = hasFocus?const Color(0xff0EBE7F):Colors.black45;
-                                              _otpfocusNodeBorder = hasFocus
-                                                  ? OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xff0EBE7F),
-                                                ),
-                                                borderRadius: BorderRadius.circular(8.0),
-                                              )
-                                                  : OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Colors.grey,
-                                                ),
-                                                borderRadius: BorderRadius.circular(8.0),
-                                              );
-                                            });
-                                          },
-                                          child: TextField(
-                                            focusNode: _otpfocusNode,
-                                            maxLength: 10,
-                                            controller: otp,
-                                            cursorColor: const Color(0xff0EBE7F),
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                              counterText: "",
-                                              prefixIcon: Icon(Icons.phone,color: otp1),
-                                              filled: true,
-                                              fillColor: Colors.white,
-                                              enabledBorder: _otpfocusNodeBorder,
-                                              focusedBorder: _otpfocusNodeBorder,
-                                              hintText: "Enter Your Number",
-                                            ),
-                                          ),
-                                        )),
-
-
-                                    //buttons
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 40,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: (){
+                                  ),
+                                  const SizedBox(height: 35,),
+                                  // const Spacer(),
+                                  //text fields
+                                  SizedBox(
+                                      width:double.infinity,
+                                      child: Focus(
+                                        onFocusChange: (bool hasFocus){
                                           setState(() {
-                                            // showVerificationPage = true;
+                                            otp1 = hasFocus?const Color(0xff0EBE7F):Colors.black45;
+                                            _otpfocusNodeBorder = hasFocus
+                                                ? OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                color: Color(0xff0EBE7F),
+                                              ),
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            )
+                                                : OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                color: Colors.grey,
+                                              ),
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            );
                                           });
-                                          // Navigator.push(context, MaterialPageRoute(builder: (context)=>const verification()));
-
                                         },
-                                        child: LoginButton(title: "Continue",
-                                          onTap: (){
-                                            sendOtp();
-                                          },
-                                          loading : loading
+                                        child: TextField(
+                                          focusNode: _otpfocusNode,
+                                          maxLength: 10,
+                                          controller: otp,
+                                          cursorColor: const Color(0xff0EBE7F),
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            counterText: "",
+                                            prefixIcon: Icon(Icons.phone,color: otp1),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            enabledBorder: _otpfocusNodeBorder,
+                                            focusedBorder: _otpfocusNodeBorder,
+                                            hintText: "Enter Your Number",
+                                          ),
                                         ),
+                                      )),
+
+
+                                  //buttons
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 40,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        setState(() {
+                                          // showVerificationPage = true;
+                                        });
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context)=>const verification()));
+
+                                      },
+                                      child: LoginButton(title: "Continue",
+                                        onTap: (){
+                                          sendOtp();
+                                        },
+                                        loading : loading
                                       ),
                                     ),
+                                  ),
 
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
                           ),

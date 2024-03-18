@@ -22,7 +22,7 @@ class _AllRecordsState extends State<AllRecords> {
 
   void goBackToProfileScreen(BuildContext context) {
     Navigator.popUntil(context, (route) => route.isFirst);
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PageFive()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage()));
   }
   @override
   Widget build(BuildContext context) {

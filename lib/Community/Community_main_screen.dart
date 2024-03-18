@@ -72,7 +72,7 @@ class _CommunityState extends State<Community> {
       floatingActionButton: Builder(
         builder: (BuildContext context) {
           return Padding(
-            padding: const EdgeInsets.only(right: 15.0,bottom: 15),
+            padding: const EdgeInsets.only(right: 8.0,bottom: 10),
             child: CircularFabMenu(),
           );
         },
@@ -245,7 +245,7 @@ class _CommunityState extends State<Community> {
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(5),
                                           child: CachedImageView(
-                                            image: "https://img.freepik.com/free-photo/group-happy-diverse-volunteers_53876-166979.jpg?t=st=1710242952~exp=1710246552~hmac=5edb6dde6dae84a0c9402acb01a9effe12790306d20b240d39daf03f3a6cd855&w=1060",
+                                            image: "https://www.libertymarketing.co.uk/wp-content/uploads/2017/08/anxiety-stats.png",
                                             fit: BoxFit.cover,
                                             width: double.infinity,
                                             height: 220,

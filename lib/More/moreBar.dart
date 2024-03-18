@@ -169,15 +169,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   itemBuilder: (context, index){
                   return GestureDetector(
                     onTap: (){
-                      if(index==1){
+                      if(index==0){
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => const doctors()));
                       }
-                      else if(index==0){
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const ProfilePage()));
-                      }
-                      else if(index==2) {
+                      // else if(index==0){
+                      //   // Navigator.push(context,
+                      //   //     MaterialPageRoute(builder: (context) => const ProfilePage()));
+                      // }
+                      else if(index==1) {
                         FirebaseFirestore.instance.collection("All Records").get().then((querySnapshot) {
                           if (querySnapshot.docs.isNotEmpty) {
                             Navigator.push(
@@ -193,23 +193,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // Handle error
                         });
                       }
-                      else if(index == 4){
+                      else if(index == 3){
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => const NoOrderMedicine()));
                       }
-                      else if(index == 5){
+                      else if(index == 4){
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => const NoTestBooking()));
                       }
-                      else if(index==6){
+                      else if(index==5){
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => const HelpCenter()));
                       }
-                      else if(index==7){
+                      else if(index==6){
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => const Setting()));
                       }
-                      else if(index==8){
+                      else if(index==7){
                           showDialog(
                               context: context,
                               builder: (context) {

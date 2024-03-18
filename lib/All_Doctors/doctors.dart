@@ -197,6 +197,7 @@ class _doctorsState extends State<doctors> {
                                                     style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 20,
+                                                      fontFamily: 'abhaya'
                                                   ),),
                                                   Icon(Icons.favorite, color: Colors.deepOrange,size: 25,)
                                                 ],
@@ -205,7 +206,8 @@ class _doctorsState extends State<doctors> {
                                               Text("${doctorData['category']} Specialist", style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.grey,
-                                                fontSize: 15,
+                                                fontSize: 12,
+                                                fontFamily: 'lato'
                                               ),),
                                               SizedBox(height: 5,),
                                               Row(

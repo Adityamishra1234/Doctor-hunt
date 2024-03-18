@@ -28,7 +28,7 @@ List<HomeModel> Homecontents = [
     // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
   ),
   HomeModel(
-    image: 'assets/images/LiveImage3.png',
+    image: 'assets/images/livedoctor1.png',
     image2: 'assets/images/categoryImage3.png',
     categoryColor:
   Color(0xffFE7F44),
@@ -40,6 +40,37 @@ List<HomeModel> Homecontents = [
     image: 'assets/images/LiveImage2.png',
     categoryColor: Color(0xffFF484C),
     // discription: "Choose Best Doctors",
+    // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+  ),
+  HomeModel(
+    image: 'assets/images/livedoctor1.png',
+    image2: 'assets/images/eye.png',
+    categoryColor: Color(0xff2753F3),
+
+    // discription: "Find Trusted Doctors",
+    // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+  ),
+  HomeModel(
+    image2: 'assets/images/categoryImage4.png',
+    image: 'assets/images/LiveImage2.png',
+    categoryColor: Color(0xffFF484C),
+    // discription: "Choose Best Doctors",
+    // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+  ),
+  HomeModel(
+    image: 'assets/images/LiveImage2.png',
+    image2: 'assets/images/categoryImage3.png',
+    categoryColor:
+    Color(0xffFE7F44),
+    // discription: "Easy Appointments",
+    // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+  ),
+  HomeModel(
+    image: 'assets/images/livedoctor1.png',
+    image2: 'assets/images/eye.png',
+    categoryColor: Color(0xff2753F3),
+
+    // discription: "Find Trusted Doctors",
     // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
   ),
 ];

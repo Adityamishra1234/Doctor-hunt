@@ -1,4 +1,5 @@
 // import 'package:doctor_hunt/HomeScreen/home_screen.dart';
+import 'package:doctor_hunt/Services/notification_service.dart';
 import 'package:doctor_hunt/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,8 @@ void main ()  async {
   await Firebase.initializeApp();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String userName = prefs.getString('userName') ?? ''; // Provide a default value if null
-  String userEmail = prefs.getString('userEmail') ?? ''; // Provide a default value if null
+  String userName = prefs.getString('userName') ?? '';
+  String userEmail = prefs.getString('userEmail') ?? '';
   String userPhotoUrl = prefs.getString('userPhotoUrl') ?? '';
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -23,6 +24,9 @@ void main ()  async {
     statusBarIconBrightness: Brightness.light,
     systemNavigationBarIconBrightness: Brightness.light,
   ));
+
+  //initialization of notification service here
+  await NotificationService.initializeNotificationService();
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => UserProvider())

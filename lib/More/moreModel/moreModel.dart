@@ -8,13 +8,12 @@ class MoreModel {
 }
 
 List<MoreModel> morebar = [
+  // MoreModel (
+  //   image: Icon(Icons.person_pin, color: Color(0xff0EBE7F),),
+  //   discription: "Your Profile",
+  //   // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+  // ),
   MoreModel (
-    image: Icon(Icons.person_pin, color: Color(0xff0EBE7F),),
-    discription: "Your Profile",
-    // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
-  ),
-  MoreModel (
-
     image: Icon(Icons.health_and_safety_outlined,color: Color(0xff0EBE7F)),
     discription: "My Doctors",
     // discription1: "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",

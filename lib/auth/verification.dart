@@ -34,11 +34,6 @@ class _verificationState extends State<verification> {
     );
     super.initState();
   }
-  @override
-  void dispose(){
-    _emailfocusNode.dispose();
-    super.dispose();
-  }
 
   void verifyOtp()async{
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -81,86 +76,84 @@ class _verificationState extends State<verification> {
                 child: SingleChildScrollView(
                   child: Stack(
                     children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: SafeArea(
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 60,),
-                                    const Text("Enter 6 Digits Code",
-                                      maxLines: 3,
-                                      style:  TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff414040),
-                                      ),
+                      SingleChildScrollView(
+                        child: SafeArea(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 60,),
+                                  const Text("Enter 6 Digits Code",
+                                    maxLines: 3,
+                                    style:  TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff414040),
                                     ),
-                                    const SizedBox(height: 5,),
-                                    const Text("Enter the 6 digits code that you received on your Phone.",
-                                      maxLines: 5,
-                                      style:  TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey,
-                                      ),
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  const Text("Enter the 6 digits code that you received on your Phone.",
+                                    maxLines: 5,
+                                    style:  TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.grey,
                                     ),
-                                    const SizedBox(height: 35,),
-                                    // const Spacer(),
-                                    //text fields
-                                    SizedBox(
-                                        width:double.infinity,
-                                        child:  Center(
-                                          child: SizedBox(
-                                            width: double.infinity,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(2.0),
-                                              child: PinCodeTextField(
-                                                keyboardType: TextInputType.number,
-                                                controller: otpController,
-                                                appContext: context,
-                                                length: 6,
-                                                onChanged: (value) {},
-                                                onCompleted: (value) {
-                                                  // verifyOtp();
-                                                },
-                                                pinTheme: PinTheme(
-                                                    shape: PinCodeFieldShape.box,
-                                                    borderRadius: BorderRadius.circular(15.0),
-                                                    selectedFillColor:  Colors.grey[200],
-                                                    inactiveFillColor: Colors.grey[200],
-                                                    inactiveColor: Colors.grey[400],
-                                                    selectedColor: Colors.grey,
-                                                    fieldWidth: 60,
-                                                    fieldHeight: 60),
-                                                // textStyle: const TextStyle(
-                                                //   color: Color(0xff0EBE7F),
-                                                // ),
-                                              ),
+                                  ),
+                                  const SizedBox(height: 35,),
+                                  // const Spacer(),
+                                  //text fields
+                                  SizedBox(
+                                      width:double.infinity,
+                                      child:  Center(
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: PinCodeTextField(
+                                              keyboardType: TextInputType.number,
+                                              controller: otpController,
+                                              appContext: context,
+                                              length: 6,
+                                              onChanged: (value) {},
+                                              onCompleted: (value) {
+                                                // verifyOtp();
+                                              },
+                                              pinTheme: PinTheme(
+                                                  shape: PinCodeFieldShape.box,
+                                                  borderRadius: BorderRadius.circular(15.0),
+                                                  selectedFillColor:  Colors.grey[200],
+                                                  inactiveFillColor: Colors.grey[200],
+                                                  inactiveColor: Colors.grey[400],
+                                                  selectedColor: Colors.grey,
+                                                  fieldWidth: 60,
+                                                  fieldHeight: 60),
+                                              // textStyle: const TextStyle(
+                                              //   color: Color(0xff0EBE7F),
+                                              // ),
                                             ),
                                           ),
                                         ),
-                                    ),
-
-                                    //buttons
-                                      Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 40,
                                       ),
-                                      child: LoginButton(title: "Continue",
-                                        onTap: (){
-                                        verifyOtp();
-                                        },
+                                  ),
 
-                                          loading:loading
-                                      ),
+                                  //buttons
+                                    Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 40,
                                     ),
+                                    child: LoginButton(title: "Continue",
+                                      onTap: (){
+                                      verifyOtp();
+                                      },
 
-                                  ],
-                                ),
+                                        loading:loading
+                                    ),
+                                  ),
+
+                                ],
                               ),
                             ),
                           ),
