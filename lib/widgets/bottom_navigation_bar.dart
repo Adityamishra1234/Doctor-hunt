@@ -7,6 +7,7 @@ import 'package:doctor_hunt/More/moreBar.dart';
 import 'package:doctor_hunt/auth/login.dart';
 import 'package:doctor_hunt/auth/signup.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants/constants.dart';
 
@@ -37,32 +38,69 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      child: SafeArea(
-        top: false,
-        child: Scaffold(
-          // extendBody: true,
-          appBar: null,
-          body: _pages[_currentIndex],
-          bottomNavigationBar: CurvedNavigationBar(
-            backgroundColor: Colors.transparent,
-            color: K.primaryColor,
-            height: 70,
-            index: _currentIndex,
-            onTap: (index)=>setState(() {
-              this._currentIndex = index;
-            }),
-            items: [
-              Icon(Icons.home, color: Colors.white),
-              Icon(Icons.favorite, color: Colors.white),
-              Image.asset("assets/images/communityIcon.png",scale: 18,color: Colors.white),
-              Image.asset("assets/images/social.png",scale: 20, color: Colors.white,),
-              Image.asset("assets/images/moreIcon.png",scale: 20,color: Colors.white),
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Exit"),
+                content: const Text("Are you sure you want to Exit?"),
+                actions: [
+                  TextButton(
+                    onPressed: () => SystemChannels.platform
+                        .invokeMethod('SystemNavigator.pop'),
+                    child: const Text(
+                      "Yes",
+                      style: TextStyle(
+                          color: K.primaryColor,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text(
+                      "No",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            });
+        return false;
+      },
+      child: Container(
+        color: Colors.black,
+        child: SafeArea(
+          top: false,
+          child: Scaffold(
+            // extendBody: true,
+            appBar: null,
+            body: _pages[_currentIndex],
+            bottomNavigationBar: CurvedNavigationBar(
+              backgroundColor: Colors.transparent,
+              color: K.primaryColor,
+              height: 70,
+              index: _currentIndex,
+              onTap: (index)=>setState(() {
+                this._currentIndex = index;
+              }),
+              items: [
+                Icon(Icons.home, color: Colors.white),
+                Icon(Icons.favorite, color: Colors.white),
+                Image.asset("assets/images/communityIcon.png",scale: 18,color: Colors.white),
+                Image.asset("assets/images/social.png",scale: 20, color: Colors.white,),
+                Image.asset("assets/images/moreIcon.png",scale: 20,color: Colors.white),
+              ],
 
-          )
+            )
 
+          ),
         ),
       ),
     );

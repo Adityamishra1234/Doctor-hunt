@@ -41,7 +41,8 @@ Future<void> signInWithGoogle(BuildContext context) async {
         print('User Photo URL: ${user.photoURL}');
         await _saveUserData(user.displayName, user.email, user.photoURL, user.phoneNumber);
         // Navigating to the home page after successful sign-in
-        // hideProgressDialog(context);
+        // hideProgressDialog(context)
+        Navigator.popUntil(context, (route) => route.isFirst);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MyHomePage()),
